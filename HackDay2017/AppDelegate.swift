@@ -16,7 +16,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var userDefaultsManager:UserDefaultsManager?
 
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
         //ステータスバー
@@ -30,7 +29,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         //Managers
-        //self.userDefaultsManager = UserDefaultsManager()
+        self.userDefaultsManager = UserDefaultsManager()
 
         return true
     }

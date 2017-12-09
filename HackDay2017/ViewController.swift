@@ -10,17 +10,26 @@ import UIKit
 import SwiftSocket
 import Alamofire
 import SwiftyJSON
-class ViewController: UIViewController {
+
+class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSource {
     
     private var viewWidth:CGFloat!
     private var viewHeight:CGFloat!
-
+    private var statusBarHeight:CGFloat!
+    private var navigationBarHeight:CGFloat!
+    private var contentViewHeight:CGFloat!
+    
+    private var contentsTableView: UITableView!
+    private var contentsItems: NSArray = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         viewWidth = self.view.frame.width
         viewHeight = self.view.frame.height
-        
+        statusBarHeight = (self.navigationController?.navigationBar.frame.origin.y)!
+        navigationBarHeight = (self.navigationController?.navigationBar.frame.size.height)!
+        contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
         
         
         //バーの右側に設置するボタンの作成
@@ -28,41 +37,55 @@ class ViewController: UIViewController {
         rightNavBtn.image = UIImage(named:"config")!
         rightNavBtn.action = #selector(postBarBtnClicked(sender:))
         rightNavBtn.target = self
- 
         self.navigationItem.rightBarButtonItem = rightNavBtn
         
-        //testServer()
+        //テーブルビューに表示する配列
+        contentsItems = ["魔女の道案内:", "いいね地図"]
+        
+        //道案内
+        let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: 12345)
+        
+        var json:Dictionary<String, Any> = ["cmd": 1]
+        let led = [1,2,3]
+        json["led"] = led
+        
+        
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+            let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+            print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
+            
+            let data: Data = jsonStr.data(using: .utf8)!
+            let result = client.send(data: data)
+            print(result)
+        } catch let error {
+            print(error)
+        }
+        
+        //テーブルビューの初期化
+        contentsTableView = UITableView()
+        contentsTableView.delegate = self
+        contentsTableView.dataSource = self
+        contentsTableView.frame = CGRect(x: 0, y: 0, width: viewWidth, height: contentViewHeight)
+        contentsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.view.addSubview(contentsTableView)
+        
+        
+        //いいねされた場所の地図
+        
+        
     }
 
-    //左側のボタンが押されたら呼ばれる
+    //右側のボタンが押されたら呼ばれる
     @objc func postBarBtnClicked(sender: UIButton){
-        print("leftBarBtnClicked")
-    }
-    
-    func sendUDP(){
         
-        
-        let client = UDPClient(address: "192.168.128.152", port: 12345)
-        let data: Data = "kabigon-daisuiki".data(using: .utf8)!
-        let result = client.send(data: data)
-        print(result)
-        //let aaa = client.recv(3)
-        //print(aaa)
+        //設定へ
+        let configView: ConfigVC = ConfigVC()
+        let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+        self.navigationItem.backBarButtonItem = backButton
+        self.navigationController?.pushViewController(configView, animated: true)
     }
-    
 
-    func showWebView() {
-        //WebView
-        let webview = UIWebView()
-        webview.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
-        self.view.addSubview(webview)
-        
-        // URLを設定.
-        let url: URL = URL(string: "http://swiswiswift.com/")!
-        let request: NSURLRequest = NSURLRequest(url: url)
-        webview.loadRequest(request as URLRequest)
-        self.view.addSubview(webview)
-    }
     
     
     func getMapApi() {
@@ -82,4 +105,37 @@ class ViewController: UIViewController {
         }
     }
     
+    
+    //MARK: テーブルビューのセルの数を設定する
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //テーブルビューのセルの数はmyItems配列の数とした
+        return self.contentsItems.count
+    }
+    
+    //MARK: テーブルビューのセルの中身を設定する
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        //myItems配列の中身をテキストにして登録した
+        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: "cell")! as UITableViewCell
+        cell.textLabel?.text = (self.contentsItems[indexPath.row] as? String)!
+        return cell
+    }
+    
+    //Mark: テーブルビューのセルが押されたら呼ばれる
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        switch indexPath.row {
+        case 0:
+            //設定へ
+            let configView: ConfigVC = ConfigVC()
+            let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self.navigationItem.backBarButtonItem = backButton
+            self.navigationController?.pushViewController(configView, animated: true)
+        default:
+            //設定へ
+            let likeMapView: LikeMapVC = LikeMapVC()
+            let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self.navigationItem.backBarButtonItem = backButton
+            self.navigationController?.pushViewController(likeMapView, animated: true)
+        }
+    }
 }

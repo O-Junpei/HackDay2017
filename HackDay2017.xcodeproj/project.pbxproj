@@ -10,6 +10,8 @@
 		19CCCE1317F920E7A2A0D924 /* Pods_HackDay2017Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BC3966CA2AEF9AF521344918 /* Pods_HackDay2017Tests.framework */; };
 		24228AF6AB98FCFA490DD7D8 /* Pods_HackDay2017UITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A69FD1E1DDBAE66BC981C3E2 /* Pods_HackDay2017UITests.framework */; };
 		8D6DA5501FDBA8810067B4A4 /* UserDefaultsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA54F1FDBA8810067B4A4 /* UserDefaultsManager.swift */; };
+		8D6DA5521FDBB65C0067B4A4 /* ConfigVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5511FDBB65C0067B4A4 /* ConfigVC.swift */; };
+		8D6DA5541FDC07D00067B4A4 /* LikeMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */; };
 		8D8F1FAA1FDAE69500C69041 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */; };
 		8D8F1FAC1FDAE69500C69041 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F1FAB1FDAE69500C69041 /* ViewController.swift */; };
 		8D8F1FAF1FDAE69500C69041 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D8F1FAD1FDAE69500C69041 /* Main.storyboard */; };
@@ -41,6 +43,8 @@
 		1E77266EDE5A4040D7CED7E4 /* Pods-HackDay2017UITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HackDay2017UITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HackDay2017UITests/Pods-HackDay2017UITests.debug.xcconfig"; sourceTree = "<group>"; };
 		6C4D0629099574410D7D0CAF /* Pods-HackDay2017Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HackDay2017Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-HackDay2017Tests/Pods-HackDay2017Tests.release.xcconfig"; sourceTree = "<group>"; };
 		8D6DA54F1FDBA8810067B4A4 /* UserDefaultsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaultsManager.swift; sourceTree = "<group>"; };
+		8D6DA5511FDBB65C0067B4A4 /* ConfigVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigVC.swift; sourceTree = "<group>"; };
+		8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeMapVC.swift; sourceTree = "<group>"; };
 		8D8F1FA61FDAE69500C69041 /* HackDay2017.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackDay2017.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8D8F1FAB1FDAE69500C69041 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -140,8 +144,10 @@
 			isa = PBXGroup;
 			children = (
 				8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */,
-				8D8F1FAB1FDAE69500C69041 /* ViewController.swift */,
 				8D6DA54F1FDBA8810067B4A4 /* UserDefaultsManager.swift */,
+				8D8F1FAB1FDAE69500C69041 /* ViewController.swift */,
+				8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */,
+				8D6DA5511FDBB65C0067B4A4 /* ConfigVC.swift */,
 				8D8F1FAD1FDAE69500C69041 /* Main.storyboard */,
 				8D8F1FB01FDAE69500C69041 /* Assets.xcassets */,
 				8D8F1FB21FDAE69500C69041 /* LaunchScreen.storyboard */,
@@ -315,12 +321,14 @@
 			inputPaths = (
 				"${SRCROOT}/Pods/Target Support Files/Pods-HackDay2017/Pods-HackDay2017-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
+				"${BUILT_PRODUCTS_DIR}/SCLAlertView/SCLAlertView.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftSocket/SwiftSocket.framework",
 				"${BUILT_PRODUCTS_DIR}/SwiftyJSON/SwiftyJSON.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SCLAlertView.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftSocket.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyJSON.framework",
 			);
@@ -465,8 +473,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D6DA5521FDBB65C0067B4A4 /* ConfigVC.swift in Sources */,
 				8D8F1FAC1FDAE69500C69041 /* ViewController.swift in Sources */,
 				8D8F1FAA1FDAE69500C69041 /* AppDelegate.swift in Sources */,
+				8D6DA5541FDC07D00067B4A4 /* LikeMapVC.swift in Sources */,
 				8D6DA5501FDBA8810067B4A4 /* UserDefaultsManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
