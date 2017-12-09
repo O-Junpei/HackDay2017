@@ -21,11 +21,24 @@ class ViewController: UIViewController {
         viewWidth = self.view.frame.width
         viewHeight = self.view.frame.height
         
-        //getMapApi()
         
-        sendUDP()
+        
+        //バーの右側に設置するボタンの作成
+        let rightNavBtn = UIBarButtonItem()
+        rightNavBtn.image = UIImage(named:"config")!
+        rightNavBtn.action = #selector(postBarBtnClicked(sender:))
+        rightNavBtn.target = self
+ 
+        self.navigationItem.rightBarButtonItem = rightNavBtn
+        
+        //testServer()
     }
 
+    //左側のボタンが押されたら呼ばれる
+    @objc func postBarBtnClicked(sender: UIButton){
+        print("leftBarBtnClicked")
+    }
+    
     func sendUDP(){
         
         
@@ -37,8 +50,7 @@ class ViewController: UIViewController {
         //print(aaa)
     }
     
-    
-    
+
     func showWebView() {
         //WebView
         let webview = UIWebView()
