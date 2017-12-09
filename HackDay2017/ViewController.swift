@@ -40,13 +40,13 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         self.navigationItem.rightBarButtonItem = rightNavBtn
         
         //テーブルビューに表示する配列
-        contentsItems = ["魔女の道案内:", "いいね地図"]
+        contentsItems = ["魔女の道案内:", "いいね地図", "雨の国"]
         
         //道案内
         let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: 12345)
         
         var json:Dictionary<String, Any> = ["cmd": 1]
-        let led = [1,2,3]
+        let led = [0xff0000,0x00ff00,0x0000ff]
         json["led"] = led
         
         
@@ -130,12 +130,20 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(configView, animated: true)
-        default:
-            //設定へ
+            
+        case 1:
+            //良いね地図へ
             let likeMapView: LikeMapVC = LikeMapVC()
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(likeMapView, animated: true)
+            
+        default:
+            //雨の国へ
+            let rainView: RainVisualVC = RainVisualVC()
+            let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self.navigationItem.backBarButtonItem = backButton
+            self.navigationController?.pushViewController(rainView, animated: true)
         }
     }
 }
