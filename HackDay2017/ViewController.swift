@@ -7,19 +7,50 @@
 //
 
 import UIKit
-
+import SwiftSocket
+import Alamofire
+import SwiftyJSON
 class ViewController: UIViewController {
+    
+    private var viewWidth:CGFloat!
+    private var viewHeight:CGFloat!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+
+        viewWidth = self.view.frame.width
+        viewHeight = self.view.frame.height
+        
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func sendUDP(){
+        
+        
+        let client = UDPClient(address: "192.168.43.76", port: 12345)
+        let data: Data = "kabigon-daisuiki".data(using: .utf8)!
+        let result = client.send(data: data)
+        print(result)
     }
-
-
+    
+    
+    
+    func showWebView() {
+        //WebView
+        let webview = UIWebView()
+        webview.frame = CGRect(x: 0, y: 0, width: viewWidth, height: viewHeight)
+        self.view.addSubview(webview)
+        
+        // URLを設定.
+        let url: URL = URL(string: "http://swiswiswift.com/")!
+        
+        // リエストを発行する.
+        let request: NSURLRequest = NSURLRequest(url: url)
+        
+        // リクエストを発行する.
+        webview.loadRequest(request as URLRequest)
+        
+        // Viewに追加する
+        self.view.addSubview(webview)
+    }
 }
-

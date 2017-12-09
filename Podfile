@@ -8,7 +8,7 @@ target 'HackDay2017' do
   # Pods for HackDay2017
   pod 'Alamofire', '~> 4.5'
   pod 'SwiftyJSON'
-  
+  pod 'SwiftSocket'
   target 'HackDay2017Tests' do
     inherit! :search_paths
     # Pods for testing
