@@ -27,7 +27,7 @@ class DestinationListVC: UIViewController,UITableViewDelegate, UITableViewDataSo
         self.navigationItem.title = "行き先リスト"
         
         //テーブルビューに表示する配列
-        destinationItems = ["＠ホームカフェ", "お台場", "皇居", "秋月電子", "とらのあな", "メロンブックス"]
+        destinationItems = ["＠ホームカフェ", "お台場", "皇居"]
         
         //Viewの大きさを取得
         viewWidth = self.view.frame.size.width
@@ -66,20 +66,30 @@ class DestinationListVC: UIViewController,UITableViewDelegate, UITableViewDataSo
         case 0:
             //＠ホームカフェ
             let directionListView: DirectionsVC = DirectionsVC()
-            directionListView.latitude = 123456
-            directionListView.longitude = 123456
+            directionListView.shopName = self.destinationItems[indexPath.row] as? String
+            directionListView.latitude = 35.699561
+            directionListView.longitude = 139.770739
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(directionListView, animated: true)
         case 1:
             //お台場
             let directionListView: DirectionsVC = DirectionsVC()
+            directionListView.shopName = self.destinationItems[indexPath.row] as? String
+            directionListView.latitude = 35.630119
+            directionListView.longitude =  139.779909
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(directionListView, animated: true)
         case 2:
             //皇居
-            print("aaa")
+            let directionListView: DirectionsVC = DirectionsVC()
+            directionListView.shopName = self.destinationItems[indexPath.row] as? String
+            directionListView.latitude = 35.683823
+            directionListView.longitude =  139.753815
+            let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self.navigationItem.backBarButtonItem = backButton
+            self.navigationController?.pushViewController(directionListView, animated: true)
         default:
             print("aaa")
         }

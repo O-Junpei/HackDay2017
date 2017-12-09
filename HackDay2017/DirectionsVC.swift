@@ -11,6 +11,7 @@ import GoogleMaps
 
 class DirectionsVC: UIViewController {
     
+    var shopName:String!
     var latitude:Double!
     var longitude:Double!
 
@@ -21,16 +22,16 @@ class DirectionsVC: UIViewController {
 
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
-        let camera = GMSCameraPosition.camera(withLatitude: 35.6797, longitude: 139.736, zoom: 6.0)
+        let camera = GMSCameraPosition.camera(withLatitude: latitude, longitude: longitude, zoom: 16.0)
         let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView.isMyLocationEnabled = true
         view = mapView
         
         // Creates a marker in the center of the map.
         let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: 35.6797, longitude: 139.736)
-        marker.title = "Sydney"
-        marker.snippet = "Australia"
+        marker.position = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        marker.title = shopName
+        //marker.snippet = snippet
         marker.map = mapView
     }
 
