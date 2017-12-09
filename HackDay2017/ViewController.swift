@@ -32,6 +32,7 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
         
         
+        
         //バーの右側に設置するボタンの作成
         let rightNavBtn = UIBarButtonItem()
         rightNavBtn.image = UIImage(named:"config")!
@@ -46,9 +47,8 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: 12345)
         
         var json:Dictionary<String, Any> = ["cmd": 1]
-        let led = [0xff0000,0x00ff00,0x0000ff]
+        let led = [0xff0000,0x00ff00,0xffff00]
         json["led"] = led
-        
         
         do {
             let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
@@ -90,7 +90,7 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
     
     func getMapApi() {
         //お天気APIから東京の天気を取得する
-        let url:String = "https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyDM1iVF73DzB5cRG5C0xHrIMUIKepofwow"
+        let url:String = "http://192.168.128.197/res"
         Alamofire.request(url, method: .get, encoding: JSONEncoding.default).responseJSON{ response in
             
             switch response.result {
@@ -98,7 +98,6 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
                 let json:JSON = JSON(response.result.value ?? kill)
                 print(json)
 
-            
             case .failure(let error):
                 print(error)
             }

@@ -10,6 +10,7 @@ import UIKit
 import CoreLocation
 import SCLAlertView
 import SwiftSocket
+import Alamofire
 import SwiftyJSON
 
 class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
@@ -42,7 +43,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
 
         //テーブルビューに表示する配列
-        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令"]
+        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令(未実装)","いいねAPIを押す","トランザクションAPIを押す"]
         
         //テーブルビューの初期化
         configTableView = UITableView()
@@ -56,6 +57,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         locationManager = CLLocationManager() // インスタンスの生成
         locationManager.delegate = self  // CLLocationManagerDelegateプロトコルを実装するクラスを指定する
         locationManager.startUpdatingLocation()
+        
     }
     
     //MARK: テーブルビューのセルの数を設定する
@@ -84,6 +86,12 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         case 5:
             //現在地取得
+            cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
+        case 6:
+            //いいねAPIをとりあえず押す
+            cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
+        case 7:
+            //作成APIをとりあえず押す
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         default:
             cell.textLabel?.text = "出てはいけないもの"
@@ -135,7 +143,6 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
                     let data: Data = sendText.data(using: .utf8)!
                     let result = client.send(data: data)
                     print(result)
-                    
                 }else{
                     SCLAlertView().showWarning("Error", subTitle: "起きてはいけないエラー")
                 }
@@ -163,10 +170,47 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 5:
             //点灯命令
             let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
-
             let data: Data = "tyomado".data(using: .utf8)!
             let result = client.send(data: data)
             print(result)
+            
+        case 6:
+            //いいねAPI
+            let parameters: Parameters = [
+                "lat": Float(37.785834),
+                "lang": Float(-122.406417)
+            ]
+            Alamofire.request(UtilityLibrary.getAPIURL() + "likespot/", method: .post, parameters: parameters,encoding: JSONEncoding.default).responseJSON{ response in
+                
+                switch response.result {
+                case .success:
+                    let json:JSON = JSON(response.result.value ?? kill)
+                    print(json)
+                case .failure(let error):
+                    print(error)
+                }
+            }
+            
+        case 7:
+            //makeAPI
+            let parameters: Parameters = [
+                "index": Int(12345),
+                "lat": Float(37.785834),
+                "lang": Float(-122.406417),
+                "to_id":"123.456.788",
+                "from_id":"123.456.788",
+                "amount":Int(234)
+            ]
+            Alamofire.request(UtilityLibrary.getAPIURL() + "make/", method: .post, parameters: parameters,encoding: JSONEncoding.default).responseJSON{ response in
+                
+                switch response.result {
+                case .success:
+                    let json:JSON = JSON(response.result.value ?? kill)
+                    print(json)
+                case .failure(let error):
+                    print(error)
+                }
+            }
             
         default:
             SCLAlertView().showWarning("Error", subTitle: "起きてはいけないエラー")
@@ -207,10 +251,9 @@ extension ConfigVC: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         for location in locations {
-            print("緯度:\(location.coordinate.latitude) 経度:\(location.coordinate.longitude) 取得時刻:\(location.timestamp.description)")
+            print("緯度:\(location.coordinate.latitude) 経度:\(location.coordinate.longitude) 取得時刻:\(location.timestamp)")
             latitude = location.coordinate.latitude
             longitude = location.coordinate.longitude
-
         }
     }
     

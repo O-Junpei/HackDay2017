@@ -29,8 +29,6 @@ class LikeMapVC: UIViewController {
         self.view.backgroundColor = UIColor.red
         self.navigationItem.title = "ライクマップ"
 
-        //CLAlertView().showInfo("Important info", subTitle: "You are great")
-
         //WebView
         let webview = UIWebView()
         webview.frame = CGRect(x: 0, y: 0, width: viewWidth, height: contentViewHeight)

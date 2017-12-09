@@ -18,10 +18,7 @@ class UserDefaultsManager: NSObject {
         userDefaults.register(defaults: ["KEY_Wroom_IP": "123.456.789.123"])
         userDefaults.register(defaults: ["KEY_Wroom_Port": "12345"])
         userDefaults.register(defaults: ["KEY_API_URL": "www.xvideos.com"])
-
     }
-    
-    
 }
 
 
