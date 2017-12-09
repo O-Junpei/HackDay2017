@@ -14,6 +14,7 @@
 		8D6DA5541FDC07D00067B4A4 /* LikeMapVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */; };
 		8D6DA5561FDC0EF50067B4A4 /* RainVisualVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5551FDC0EF50067B4A4 /* RainVisualVC.swift */; };
 		8D6DA5581FDC3A6D0067B4A4 /* DirectionsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5571FDC3A6D0067B4A4 /* DirectionsVC.swift */; };
+		8D6DA55A1FDC4C220067B4A4 /* DestinationListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D6DA5591FDC4C220067B4A4 /* DestinationListVC.swift */; };
 		8D8F1FAA1FDAE69500C69041 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */; };
 		8D8F1FAC1FDAE69500C69041 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D8F1FAB1FDAE69500C69041 /* ViewController.swift */; };
 		8D8F1FAF1FDAE69500C69041 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8D8F1FAD1FDAE69500C69041 /* Main.storyboard */; };
@@ -49,6 +50,7 @@
 		8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LikeMapVC.swift; sourceTree = "<group>"; };
 		8D6DA5551FDC0EF50067B4A4 /* RainVisualVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RainVisualVC.swift; sourceTree = "<group>"; };
 		8D6DA5571FDC3A6D0067B4A4 /* DirectionsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectionsVC.swift; sourceTree = "<group>"; };
+		8D6DA5591FDC4C220067B4A4 /* DestinationListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationListVC.swift; sourceTree = "<group>"; };
 		8D8F1FA61FDAE69500C69041 /* HackDay2017.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HackDay2017.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		8D8F1FAB1FDAE69500C69041 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				8D8F1FA91FDAE69500C69041 /* AppDelegate.swift */,
 				8D6DA54F1FDBA8810067B4A4 /* UserDefaultsManager.swift */,
 				8D8F1FAB1FDAE69500C69041 /* ViewController.swift */,
+				8D6DA5591FDC4C220067B4A4 /* DestinationListVC.swift */,
 				8D6DA5571FDC3A6D0067B4A4 /* DirectionsVC.swift */,
 				8D6DA5531FDC07D00067B4A4 /* LikeMapVC.swift */,
 				8D6DA5551FDC0EF50067B4A4 /* RainVisualVC.swift */,
@@ -484,6 +487,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8D6DA5521FDBB65C0067B4A4 /* ConfigVC.swift in Sources */,
+				8D6DA55A1FDC4C220067B4A4 /* DestinationListVC.swift in Sources */,
 				8D8F1FAC1FDAE69500C69041 /* ViewController.swift in Sources */,
 				8D8F1FAA1FDAE69500C69041 /* AppDelegate.swift in Sources */,
 				8D6DA5541FDC07D00067B4A4 /* LikeMapVC.swift in Sources */,

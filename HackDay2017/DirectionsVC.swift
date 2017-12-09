@@ -10,6 +10,9 @@ import UIKit
 import GoogleMaps
 
 class DirectionsVC: UIViewController {
+    
+    var latitude:Double!
+    var longitude:Double!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,8 +32,6 @@ class DirectionsVC: UIViewController {
         marker.title = "Sydney"
         marker.snippet = "Australia"
         marker.map = mapView
-
     }
-
 
 }

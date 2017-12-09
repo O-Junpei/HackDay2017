@@ -43,7 +43,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
 
         //テーブルビューに表示する配列
-        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令(未テスト)","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ(未テスト)"]
+        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ"]
         
         //テーブルビューの初期化
         configTableView = UITableView()

@@ -39,7 +39,7 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         self.navigationItem.rightBarButtonItem = rightNavBtn
         
         //テーブルビューに表示する配列
-        contentsItems = ["魔女の道案内:", "いいね地図", "雨の国"]
+        contentsItems = ["魔女の道案内", "いいね地図", "雨の国"]
         
         //テーブルビューの初期化
         contentsTableView = UITableView()
@@ -103,10 +103,10 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         switch indexPath.row {
         case 0:
             //道案内へ
-            let directionView: DirectionsVC = DirectionsVC()
+            let directionListView: DestinationListVC = DestinationListVC()
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
-            self.navigationController?.pushViewController(directionView, animated: true)
+            self.navigationController?.pushViewController(directionListView, animated: true)
             
         case 1:
             //良いね地図へ
