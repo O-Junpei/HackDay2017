@@ -21,16 +21,20 @@ class ViewController: UIViewController {
         viewWidth = self.view.frame.width
         viewHeight = self.view.frame.height
         
+        //getMapApi()
         
+        sendUDP()
     }
 
     func sendUDP(){
         
         
-        let client = UDPClient(address: "192.168.43.76", port: 12345)
+        let client = UDPClient(address: "10.11.98.176", port: 12345)
         let data: Data = "kabigon-daisuiki".data(using: .utf8)!
         let result = client.send(data: data)
         print(result)
+        //let aaa = client.recv(3)
+        //print(aaa)
     }
     
     
@@ -43,14 +47,27 @@ class ViewController: UIViewController {
         
         // URLを設定.
         let url: URL = URL(string: "http://swiswiswift.com/")!
-        
-        // リエストを発行する.
         let request: NSURLRequest = NSURLRequest(url: url)
-        
-        // リクエストを発行する.
         webview.loadRequest(request as URLRequest)
-        
-        // Viewに追加する
         self.view.addSubview(webview)
     }
+    
+    
+    func getMapApi() {
+        //お天気APIから東京の天気を取得する
+        let url:String = "https://maps.googleapis.com/maps/api/directions/json?origin=75+9th+Ave+New+York,+NY&destination=MetLife+Stadium+1+MetLife+Stadium+Dr+East+Rutherford,+NJ+07073&key=AIzaSyDM1iVF73DzB5cRG5C0xHrIMUIKepofwow"
+        Alamofire.request(url, method: .get, encoding: JSONEncoding.default).responseJSON{ response in
+            
+            switch response.result {
+            case .success:
+                let json:JSON = JSON(response.result.value ?? kill)
+                print(json)
+
+            
+            case .failure(let error):
+                print(error)
+            }
+        }
+    }
+    
 }
