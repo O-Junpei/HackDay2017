@@ -29,7 +29,7 @@ class ViewController: UIViewController {
     func sendUDP(){
         
         
-        let client = UDPClient(address: "10.11.98.176", port: 12345)
+        let client = UDPClient(address: "192.168.128.152", port: 12345)
         let data: Data = "kabigon-daisuiki".data(using: .utf8)!
         let result = client.send(data: data)
         print(result)
