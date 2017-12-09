@@ -43,7 +43,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
 
         //テーブルビューに表示する配列
-        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ"]
+        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ(下)","ピカピカ上と下","前", "右斜め前", "左斜め前", "右斜め後ろ","左斜め後ろ","後ろ"]
         
         //テーブルビューの初期化
         configTableView = UITableView()
@@ -94,10 +94,13 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
             //作成APIをとりあえず押す
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         case 8:
-            //ランダムに傘の色を変更する
+            //ランダムに傘の色を変更する(下)
+            cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
+        case 9:
+            //下と上のLEDの変更k
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         default:
-            cell.textLabel?.text = "出てはいけないもの"
+            cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
 
         }
         return cell
@@ -173,7 +176,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 5:
             //点灯命令
             let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
-            var json:Dictionary<String, Any> = ["cmd": 1]
+            var json:Dictionary<String, Any> = ["cmd": 0]
             let led = [0xff0000,0x00ff00,0xffff00,0x000000,0x00ff00,0xffff00,0xff0000,0x000000,0x00ff00,0xffff00,0xff0000,0x000000]
             json["led"] = led
             
@@ -193,7 +196,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
             //いいねAPI
             let parameters: Parameters = [
                 "lat": Float(37.785834),
-                "lang": Float(-122.406417)
+                "lang": Float(122.406417)
             ]
             Alamofire.request(UtilityLibrary.getAPIURL() + "likespot/", method: .post, parameters: parameters,encoding: JSONEncoding.default).responseJSON{ response in
                 
@@ -227,10 +230,10 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
                 }
             }
         case 8:
-            //ランダムに道をピカピカする
+            //ランダムに道をピカピカする　下
             //点灯命令
             let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
-            var json:Dictionary<String, Any> = ["cmd": 1]
+            var json:Dictionary<String, Any> = ["cmd": 2]
             var led:[Int] = []
             
             for i in 0...11 {
@@ -257,6 +260,145 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
             } catch let error {
                 print(error)
             }
+            
+        case 9:
+            //上下ピカピカ
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            //上ピカピカ
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            var led:[Int] = []
+            
+            for i in 0...11 {
+                //
+                print(i)
+                let red:Int = Int(arc4random_uniform(255))
+                let blue:Int = Int(arc4random_uniform(255))
+                let yellow:Int = Int(arc4random_uniform(255))
+                print(String(red, radix: 16))
+                let colorStr:String = String(red, radix: 16) + String(blue, radix: 16) + String(yellow, radix: 16)
+                print(colorStr)
+                let color:Int = Int(colorStr, radix: 16) ?? 0
+                led.append(color)
+            }
+            json["led"] = led
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
+                
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 0.5秒後に実行したい処理
+                
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                var led2:[Int] = []
+                
+                for i in 0...5 {
+                    //
+                    print(i)
+                    let red:Int = Int(arc4random_uniform(255))
+                    let blue:Int = Int(arc4random_uniform(255))
+                    let yellow:Int = Int(arc4random_uniform(255))
+                    print(String(red, radix: 16))
+                    let colorStr:String = String(red, radix: 16) + String(blue, radix: 16) + String(yellow, radix: 16)
+                    print(colorStr)
+                    let color:Int = Int(colorStr, radix: 16) ?? 0
+                    led2.append(color)
+                }
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
+                    
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+            
+        case 10:
+            //前
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 1]
+            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 0.5秒後に実行したい処理
+                
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                var led2:[Int] = []
+                
+                for i in 0...5 {
+                    //
+                    print(i)
+                    let red:Int = Int(arc4random_uniform(255))
+                    let blue:Int = Int(arc4random_uniform(255))
+                    let yellow:Int = Int(arc4random_uniform(255))
+                    print(String(red, radix: 16))
+                    let colorStr:String = String(red, radix: 16) + String(blue, radix: 16) + String(yellow, radix: 16)
+                    print(colorStr)
+                    let color:Int = Int(colorStr, radix: 16) ?? 0
+                    led2.append(color)
+                }
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
+                    
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+            
+            
+            
+        case 11:
+            //右斜め前
+            print("adad")
+            
+        case 12:
+            //左斜め前
+            print("adad")
+
+        case 13:
+            //右斜め後ろ
+            print("adad")
+
+        case 14:
+            //左斜め後ろ
+            print("adad")
+
+        case 15:
+            //後ろ
+            print("adad")
+
+            
+            
         default:
             SCLAlertView().showWarning("Error", subTitle: "起きてはいけないエラー")
         }

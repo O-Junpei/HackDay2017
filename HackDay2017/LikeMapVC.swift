@@ -34,20 +34,21 @@ class LikeMapVC: UIViewController {
         self.view.backgroundColor = UIColor.white
         self.navigationItem.title = "ライクマップ"
 
-        //getLikeSpots()
-        setGoogleMap()
+        getLikeSpots()
+        //
     }
     
     
     func getLikeSpots() {
-        Alamofire.request(UtilityLibrary.getAPIURL() + "/lilesplots").responseJSON{ response in
+        Alamofire.request("http://rainy-country.herokuapp.com/getnearlilespot?let=35.704&lang=139.771").responseJSON{ response in
             
             switch response.result {
             case .success:
                 
                 let json:JSON = JSON(response.result.value ?? kill)
-                self.likeSpots = json
-                
+                self.likeSpots = json["spots"]
+                print(self.likeSpots)
+                self.setGoogleMap()
             case .failure(let error):
                 print(error)
 
@@ -59,23 +60,21 @@ class LikeMapVC: UIViewController {
         // Create a GMSCameraPosition that tells the map to display the
         // coordinate -33.86,151.20 at zoom level 6.
         
-        let camera = GMSCameraPosition.camera(withLatitude: 35.700525, longitude: 139.772508, zoom: 12.0)
+        let camera = GMSCameraPosition.camera(withLatitude: 35.700525, longitude: 139.772508, zoom: 13.5)
         let mapView = GMSMapView.map(withFrame: CGRect.zero, camera: camera)
         mapView.isMyLocationEnabled = true
         view = mapView
         
-        // Creates a marker in the center of the map.
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2D(latitude: 35.7040525, longitude: 139.775508)
-        marker.title = "サンプル1"
-        //marker.snippet = snippet
-        marker.map = mapView
+        for i in 0...self.likeSpots.count {
+            let marker = GMSMarker()
+            marker.position = CLLocationCoordinate2D(latitude: self.likeSpots[i]["latitude"].doubleValue, longitude: self.likeSpots[i]["longitude"].doubleValue)
+            marker.title = self.likeSpots[i]["shop_name"].stringValue
+            marker.icon = UIImage(named: "rain")
+            marker.map = mapView
+            
+        }
         
-        let marker2 = GMSMarker()
-        marker2.position = CLLocationCoordinate2D(latitude: 35.6940525, longitude: 139.770508)
-        marker2.title = "サンプル2"
-        //marker.snippet = snippet
-        marker2.map = mapView
+
     }
     
     
