@@ -16,7 +16,6 @@ class RainVisualVC: UIViewController {
     private var navigationBarHeight:CGFloat!
     private var contentViewHeight:CGFloat!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,7 +26,6 @@ class RainVisualVC: UIViewController {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
         
         self.navigationItem.title = "雨の国ビジュアル"
-        
         
         //WebView
         let webview = UIWebView()

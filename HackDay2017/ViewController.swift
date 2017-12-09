@@ -30,9 +30,7 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         statusBarHeight = (self.navigationController?.navigationBar.frame.origin.y)!
         navigationBarHeight = (self.navigationController?.navigationBar.frame.size.height)!
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
-        
-        
-        
+
         //バーの右側に設置するボタンの作成
         let rightNavBtn = UIBarButtonItem()
         rightNavBtn.image = UIImage(named:"config")!
@@ -43,25 +41,6 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         //テーブルビューに表示する配列
         contentsItems = ["魔女の道案内:", "いいね地図", "雨の国"]
         
-        //道案内
-        let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: 12345)
-        
-        var json:Dictionary<String, Any> = ["cmd": 1]
-        let led = [0xff0000,0x00ff00,0xffff00]
-        json["led"] = led
-        
-        do {
-            let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
-            let jsonStr = String(bytes: jsonData, encoding: .utf8)!
-            print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
-            
-            let data: Data = jsonStr.data(using: .utf8)!
-            let result = client.send(data: data)
-            print(result)
-        } catch let error {
-            print(error)
-        }
-        
         //テーブルビューの初期化
         contentsTableView = UITableView()
         contentsTableView.delegate = self
@@ -70,9 +49,8 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         contentsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.view.addSubview(contentsTableView)
         
-        
-        //いいねされた場所の地図
-        
+        //強制的にAPIのURLを変更する
+        UtilityLibrary.setAPIUR(apiURL: "http://rainy-country.herokuapp.com/")
         
     }
 
@@ -124,11 +102,11 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         
         switch indexPath.row {
         case 0:
-            //設定へ
-            let configView: ConfigVC = ConfigVC()
+            //道案内へ
+            let directionView: DirectionsVC = DirectionsVC()
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
-            self.navigationController?.pushViewController(configView, animated: true)
+            self.navigationController?.pushViewController(directionView, animated: true)
             
         case 1:
             //良いね地図へ

@@ -43,7 +43,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
 
         //テーブルビューに表示する配列
-        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令(未実装)","いいねAPIを押す","トランザクションAPIを押す"]
+        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令(未テスト)","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ(未テスト)"]
         
         //テーブルビューの初期化
         configTableView = UITableView()
@@ -92,6 +92,9 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         case 7:
             //作成APIをとりあえず押す
+            cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
+        case 8:
+            //ランダムに傘の色を変更する
             cell.textLabel?.text = (self.configItems[indexPath.row] as? String)!
         default:
             cell.textLabel?.text = "出てはいけないもの"
@@ -170,9 +173,21 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 5:
             //点灯命令
             let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
-            let data: Data = "tyomado".data(using: .utf8)!
-            let result = client.send(data: data)
-            print(result)
+            var json:Dictionary<String, Any> = ["cmd": 1]
+            let led = [0xff0000,0x00ff00,0xffff00,0x000000,0x00ff00,0xffff00,0xff0000,0x000000,0x00ff00,0xffff00,0xff0000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                print(jsonStr)
+                
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
             
         case 6:
             //いいねAPI
@@ -211,10 +226,39 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
                     print(error)
                 }
             }
+        case 8:
+            //ランダムに道をピカピカする
+            //点灯命令
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 1]
+            var led:[Int] = []
             
+            for i in 0...11 {
+                //
+                print(i)
+                let red:Int = Int(arc4random_uniform(255))
+                let blue:Int = Int(arc4random_uniform(255))
+                let yellow:Int = Int(arc4random_uniform(255))
+                print(String(red, radix: 16))
+                let colorStr:String = String(red, radix: 16) + String(blue, radix: 16) + String(yellow, radix: 16)
+                print(colorStr)
+                let color:Int = Int(colorStr, radix: 16) ?? 0
+                led.append(color)
+            }
+            json["led"] = led
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
+                
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
         default:
             SCLAlertView().showWarning("Error", subTitle: "起きてはいけないエラー")
-
         }
     }
 }

@@ -26,7 +26,7 @@ class LikeMapVC: UIViewController {
         navigationBarHeight = (self.navigationController?.navigationBar.frame.size.height)!
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
         
-        self.view.backgroundColor = UIColor.red
+        self.view.backgroundColor = UIColor.white
         self.navigationItem.title = "ライクマップ"
 
         //WebView
