@@ -10,6 +10,8 @@ target 'HackDay2017' do
   pod 'SwiftyJSON'
   pod 'SwiftSocket'
   pod 'SCLAlertView'
+  pod 'GoogleMaps'
+  pod 'GooglePlaces'
 
   target 'HackDay2017Tests' do
     inherit! :search_paths
