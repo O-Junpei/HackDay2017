@@ -39,7 +39,7 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
         self.navigationItem.rightBarButtonItem = rightNavBtn
         
         //テーブルビューに表示する配列
-        contentsItems = ["魔女の道案内", "いいね地図", "雨の国"]
+        contentsItems = ["魔女の道案内", "いいね地図", "雨の国","コントロール画面"]
         
         //テーブルビューの初期化
         contentsTableView = UITableView()
@@ -114,13 +114,18 @@ class ViewController: UIViewController ,UITableViewDelegate, UITableViewDataSour
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(likeMapView, animated: true)
-            
-        default:
+        case 2:
             //雨の国へ
             let rainView: RainVisualVC = RainVisualVC()
             let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
             self.navigationItem.backBarButtonItem = backButton
             self.navigationController?.pushViewController(rainView, animated: true)
+        default:
+            //コントロール画面へ
+            let commandView: CmdVC = CmdVC()
+            let backButton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
+            self.navigationItem.backBarButtonItem = backButton
+            self.navigationController?.pushViewController(commandView, animated: true)
         }
     }
 }

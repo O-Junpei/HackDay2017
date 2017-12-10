@@ -27,8 +27,8 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
     
     //ロケーション
     var locationManager: CLLocationManager!
-    var latitude = 37.785834
-    var longitude = -122.406417
+    var latitude = 35.700525
+    var longitude = 139.772508
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +43,7 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         contentViewHeight = viewHeight - (statusBarHeight+navigationBarHeight)
 
         //テーブルビューに表示する配列
-        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(一方通行)","APIURL変更:", "位置情報取得","UDPでLED点灯命令","いいねAPIを押す(未テスト)","トランザクションAPIを押す(未テスト)","ランダムピカピアカ(下)","ピカピカ上と下","前", "右斜め前", "左斜め前", "右斜め後ろ","左斜め後ろ","後ろ"]
+        configItems = ["wroomIP変更:", "wroomPort変更:","UDP強制送信(deprecate)","APIURL変更:", "位置情報取得","UDPでLED点灯命令","いいねAPIを押す","トランザクションAPIを押す","ランダムピカピアカ(下)","ピカピカ上と下","前", "右斜め前", "左斜め前", "右斜め後ろ","左斜め後ろ","後ろ","全部消す"]
         
         //テーブルビューの初期化
         configTableView = UITableView()
@@ -195,9 +195,11 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 6:
             //いいねAPI
             let parameters: Parameters = [
-                "lat": Float(37.785834),
-                "lang": Float(122.406417)
+                "lat": Float(latitude),
+                "lang": Float(longitude)
             ]
+            print(parameters)
+
             Alamofire.request(UtilityLibrary.getAPIURL() + "likespot/", method: .post, parameters: parameters,encoding: JSONEncoding.default).responseJSON{ response in
                 
                 switch response.result {
@@ -212,13 +214,16 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 7:
             //makeAPI
             let parameters: Parameters = [
-                "index": Int(12345),
-                "lat": Float(37.785834),
-                "lang": Float(-122.406417),
+                "index": Int(arc4random_uniform(9999)),
+                "lat": Float(latitude),
+                "lang": Float(longitude),
                 "to_id":"123.456.788",
                 "from_id":"123.456.788",
-                "amount":Int(234)
+                "amount":Int(arc4random_uniform(234))
             ]
+            print(parameters)
+            
+            
             Alamofire.request(UtilityLibrary.getAPIURL() + "make/", method: .post, parameters: parameters,encoding: JSONEncoding.default).responseJSON{ response in
                 
                 switch response.result {
@@ -329,8 +334,8 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
         case 10:
             //前
             let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
-            var json:Dictionary<String, Any> = ["cmd": 1]
-            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000]
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x00ff00,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x0000,0x0000ff]
             json["led"] = led
             
             do {
@@ -338,35 +343,55 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
                 let jsonStr = String(bytes: jsonData, encoding: .utf8)!
                 let data: Data = jsonStr.data(using: .utf8)!
                 let result = client.send(data: data)
+                print(result)
             } catch let error {
                 print(error)
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                // 0.5秒後に実行したい処理
-                
+                // 1秒後に実行したい処理
                 //下ピカピカ
                 var json2:Dictionary<String, Any> = ["cmd": 1]
-                var led2:[Int] = []
-                
-                for i in 0...5 {
-                    //
-                    print(i)
-                    let red:Int = Int(arc4random_uniform(255))
-                    let blue:Int = Int(arc4random_uniform(255))
-                    let yellow:Int = Int(arc4random_uniform(255))
-                    print(String(red, radix: 16))
-                    let colorStr:String = String(red, radix: 16) + String(blue, radix: 16) + String(yellow, radix: 16)
-                    print(colorStr)
-                    let color:Int = Int(colorStr, radix: 16) ?? 0
-                    led2.append(color)
-                }
+                let led2:[Int] = [0x000000,0x000000,0x000000,0x000000,0x000000,0xff0000]
                 json2["led"] = led2
                 do {
                     let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
                     let jsonStr = String(bytes: jsonData, encoding: .utf8)!
-                    print(jsonStr)  // 生成されたJSON文字列 => {"Name":"Taro"}
-                    
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+
+            
+        case 11:
+            //右斜め前
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x00ff00,0x00ff,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x000000,0x000000,0x000000,0x000000,0xff0000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
                     let data: Data = jsonStr.data(using: .utf8)!
                     let result = client.send(data: data)
                     print(result)
@@ -375,29 +400,176 @@ class ConfigVC: UIViewController ,UITableViewDelegate, UITableViewDataSource {
                 }
             }
             
-            
-            
-        case 11:
-            //右斜め前
-            print("adad")
-            
         case 12:
             //左斜め前
-            print("adad")
-
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0xff0000,0x00ff00,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x0000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x0000ff,0x000000,0x000000,0x000000,0x000000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
         case 13:
             //右斜め後ろ
-            print("adad")
-
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x00ff00,0xff0000,0x000000,0x0000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x000000,0x000000,0x000000,0x0000ff,0x000000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
         case 14:
             //左斜め後ろ
-            print("adad")
-
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0x000000,0x000000,0x00ff00,0xff0000,0x000000,0x000000,0x000000,0x000000,0x000000,0x0000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x000000,0x0000ff,0x000000,0x000000,0x000000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+            
         case 15:
             //後ろ
-            print("adad")
-
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0xff0000,0x00ff00,0x000000,0x000000,0x000000,0x0000,0x000000]
+            json["led"] = led
             
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x000000,0x000000,0x0000ff,0x000000,0x000000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+        case 16:
+            //全消し
+            let client = UDPClient(address: UtilityLibrary.getWroomIP(), port: Int32(UtilityLibrary.getWroomPort())!)
+            var json:Dictionary<String, Any> = ["cmd": 2]
+            let led = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x000000,0x0000,0x000000]
+            json["led"] = led
+            
+            do {
+                let jsonData = try JSONSerialization.data(withJSONObject: json, options: [])
+                let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                let data: Data = jsonStr.data(using: .utf8)!
+                let result = client.send(data: data)
+                print(result)
+            } catch let error {
+                print(error)
+            }
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                // 1秒後に実行したい処理
+                //下ピカピカ
+                var json2:Dictionary<String, Any> = ["cmd": 1]
+                let led2:[Int] = [0x000000,0x000000,0x000000,0x000000,0x000000,0x000000]
+                json2["led"] = led2
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: json2, options: [])
+                    let jsonStr = String(bytes: jsonData, encoding: .utf8)!
+                    let data: Data = jsonStr.data(using: .utf8)!
+                    let result = client.send(data: data)
+                    print(result)
+                } catch let error {
+                    print(error)
+                }
+            }
+            
+        case 17:
+            //Lineモード
+            print("adad")
             
         default:
             SCLAlertView().showWarning("Error", subTitle: "起きてはいけないエラー")
@@ -412,7 +584,7 @@ extension ConfigVC: CLLocationManagerDelegate {
         case .notDetermined:
             print("ユーザーはこのアプリケーションに関してまだ選択を行っていません")
              // 起動中のみの取得許可を求める
-            locationManager.startUpdatingLocation()
+            locationManager.requestWhenInUseAuthorization() // 起動中のみの取得許可を求める
 
             break
         case .denied:
