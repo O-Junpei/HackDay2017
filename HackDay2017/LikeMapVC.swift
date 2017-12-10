@@ -68,7 +68,8 @@ class LikeMapVC: UIViewController {
         let udpMaker = GMSMarker()
         udpMaker.position = CLLocationCoordinate2D(latitude: 35.700525, longitude: 139.772508)
         udpMaker.title = "秋葉原UDX"
-        udpMaker.icon = UIImage(named: "rain")
+        udpMaker.snippet = "ハッカソン会場"
+        udpMaker.icon = UIImage(named: "udx")
         udpMaker.map = mapView
         
         
